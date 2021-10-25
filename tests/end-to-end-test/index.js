@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const { DOMAIN_NAME } = require('../config.json');
+const { DOMAIN_NAME } = "myprofile.cloudofthings.link";
 
 const sleep = async (r) => await new Promise(r => setTimeout(r, 2000));
 
