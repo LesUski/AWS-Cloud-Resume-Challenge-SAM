@@ -1,130 +1,243 @@
-# cloud-resume-challenge
+<br />
 
-This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
+<p align="center">
+  <a href="img/">
+    <img src="img/lab70_diagram.jpg" alt="cloudofthings" width="802" height="502">
+  </a>
+  <h3 align="center">100 days in Cloud</h3>
+<p align="center">
+    SAM-IaC-CloudFront-Website-for-Cloud-Resume-Challenge
+    <br />
+    Lab 70
+    <br />
+  </p>
 
-- hello_world - Code for the application's Lambda function.
-- events - Invocation events that you can use to invoke the function.
-- tests - Unit tests for the application code. 
-- template.yaml - A template that defines the application's AWS resources.
 
-The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
 
-If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.  
-The AWS Toolkit is an open source plug-in for popular IDEs that uses the SAM CLI to build and deploy serverless applications on AWS. The AWS Toolkit also adds a simplified step-through debugging experience for Lambda function code. See the following links to get started.
+</p>
 
-* [CLion](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [GoLand](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [IntelliJ](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [WebStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [Rider](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PhpStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PyCharm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [RubyMine](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [DataGrip](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [VS Code](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/welcome.html)
-* [Visual Studio](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html)
+<details open="open">
+  <summary><h2 style="display: inline-block">Lab Details</h2></summary>
+  <ol>
+    <li><a href="#services-covered">Services covered</a>
+    <li><a href="#lab-description">Lab description</a></li>
+    </li>
+    <li><a href="#lab-date">Lab date</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>    
+    <li><a href="#lab-steps">Lab steps</a></li>
+    <li><a href="#lab-files">Lab files</a></li>
+    <li><a href="#acknowledgements">Acknowledgements</a></li>
+  </ol>
+</details>
 
-## Deploy the sample application
+---
 
-The Serverless Application Model Command Line Interface (SAM CLI) is an extension of the AWS CLI that adds functionality for building and testing Lambda applications. It uses Docker to run your functions in an Amazon Linux environment that matches Lambda. It can also emulate your application's build environment and API.
+## Services Covered
+* ![sam](https://github.com/CloudedThings/100-Days-in-Cloud/blob/main/images/sam.jpg) **AWS SAM**
 
-To use the SAM CLI, you need the following tools.
+---
 
-* SAM CLI - [Install the SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
-* [Python 3 installed](https://www.python.org/downloads/)
-* Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community)
+## Lab description
+It's time to start deploying the Cloud Resume Challenge resources using the AWS SAM. I already have [deployed](https://cloudofthings.net/cloud-resume-challenge-part-one/) everything through a manual setup in the console and it's working fine. What I'm actually gonna do is to deploy those resources as Infrastructure as Code. But I don't want to downtime my running profile page so I thought that I'll make a mirror page for now with similar setup under another domain.
 
-To build and deploy your application for the first time, run the following in your shell:
+### Lab date
+22-10-2021
 
-```bash
-sam build --use-container
-sam deploy --guided
-```
+---
 
-The first command will build the source of your application. The second command will package and deploy your application to AWS, with a series of prompts:
+### Prerequisites
+* AWS account,
+* SAM CLI installed
+* Recommended: [aws-vault](https://github.com/99designs/aws-vault)
 
-* **Stack Name**: The name of the stack to deploy to CloudFormation. This should be unique to your account and region, and a good starting point would be something matching your project name.
-* **AWS Region**: The AWS region you want to deploy your app to.
-* **Confirm changes before deploy**: If set to yes, any change sets will be shown to you before execution for manual review. If set to no, the AWS SAM CLI will automatically deploy application changes.
-* **Allow SAM CLI IAM role creation**: Many AWS SAM templates, including this example, create AWS IAM roles required for the AWS Lambda function(s) included to access AWS services. By default, these are scoped down to minimum required permissions. To deploy an AWS CloudFormation stack which creates or modifies IAM roles, the `CAPABILITY_IAM` value for `capabilities` must be provided. If permission isn't provided through this prompt, to deploy this example you must explicitly pass `--capabilities CAPABILITY_IAM` to the `sam deploy` command.
-* **Save arguments to samconfig.toml**: If set to yes, your choices will be saved to a configuration file inside the project, so that in the future you can just re-run `sam deploy` without parameters to deploy changes to your application.
+---
 
-You can find your API Gateway Endpoint URL in the output values displayed after deployment.
+### Lab steps
+1. In an empty folder run 
 
-## Use the SAM CLI to build and test locally
+   ```
+   sam init
+   ```
 
-Build your application with the `sam build --use-container` command.
+   This will initiate a sample application in your folder and set-up SAM. Choose AWS Quick Start as Zip, I'll use Python for my Lambda code and Hello World example - stack includes API Gateway, IAM Role and Lambda function.
 
-```bash
-cloud-resume-challenge$ sam build --use-container
-```
+2. Next run (aws-vault is not necessary if you want to use your default AWS CLI credentials):
 
-The SAM CLI installs dependencies defined in `hello_world/requirements.txt`, creates a deployment package, and saves it in the `.aws-sam/build` folder.
+   ```bash
+   aws-vault exec <<YOUR-USER>> --no-session -- sam deploy --guided 
+   ```
 
-Test a single function by invoking it directly with a test event. An event is a JSON document that represents the input that the function receives from the event source. Test events are included in the `events` folder in this project.
+   This will deploy the stack in AWS.
 
-Run functions locally and invoke them with the `sam local invoke` command.
+   ![sam_cli_stack](img/lab70_sam_cli_stack.jpg)
 
-```bash
-cloud-resume-challenge$ sam local invoke HelloWorldFunction --event events/event.json
-```
+3. Ok, now that my sample resources and SAM are deployed it's time to create CRC specific resources using updating that existing stack. I wanted my site to be hosted under myprofile.cloudofthings.net domain so the S3 bucket for the frontend code needs to be called accordingly. But since I'm using CloudFront domain name later on so it doesn't really matter. Then you need to run
 
-The SAM CLI can also emulate your application's API. Use the `sam local start-api` to run the API locally on port 3000.
+   ```bash
+   sam build
+   ```
 
-```bash
-cloud-resume-challenge$ sam local start-api
-cloud-resume-challenge$ curl http://localhost:3000/
-```
+   ```
+   aws-vault exec <<YOUR-USER>> --no-session -- sam deploy
+   ```
 
-The SAM CLI reads the application template to determine the API's routes and the functions that they invoke. The `Events` property on each function's definition includes the route and method for each path.
+4. The bucket configuration needs to be public and set-up for website hosting so I added the properties and Bucket Policy to the template:
 
-```yaml
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            Path: /hello
-            Method: get
-```
+   ```yaml
+   MyWebsite:
+       Type: AWS::S3::Bucket
+       Properties:
+         AccessControl: PublicRead
+         WebsiteConfiguration:
+           IndexDocument: index.html
+         BucketName: myprofile.cloudofthings.net
+         
+   BucketPolicy:
+       Type: AWS::S3::BucketPolicy
+       Properties:
+         PolicyDocument:
+           Id: WebPolicy
+           Version: 2012-10-17
+           Statement:
+             - Sid: PublicReadForGetBucketObjects
+               Effect: Allow
+               Principal: "*"
+               Action: "s3:GetObject"
+               Resource: !Join
+                 - ""
+                 - - "arn:aws:s3:::"
+                   - !Ref MyWebsite
+                   - /*
+         Bucket: !Ref MyWebsite
+   ```
 
-## Add a resource to your application
-The application template uses AWS Serverless Application Model (AWS SAM) to define application resources. AWS SAM is an extension of AWS CloudFormation with a simpler syntax for configuring common serverless application resources such as functions, triggers, and APIs. For resources not included in [the SAM specification](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md), you can use standard [AWS CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) resource types.
+   ```bash
+   sam build && aws-vault exec sam-user --no-session -- sam deploy
+   ```
 
-## Fetch, tail, and filter Lambda function logs
+   That worked nicely. I wanted to keep my bucket private so I've set-up a CloudFront Origin Access Identity, and adjusted the buckets policy, I don't it just felt a bit more secure to only allow CloudFront to get objects from the bucket:
 
-To simplify troubleshooting, SAM CLI has a command called `sam logs`. `sam logs` lets you fetch logs generated by your deployed Lambda function from the command line. In addition to printing the logs on the terminal, this command has several nifty features to help you quickly find the bug.
+   ```yaml
+   MyWebsite:
+       Type: AWS::S3::Bucket
+       Properties:
+         AccessControl: Private
+         WebsiteConfiguration:
+           IndexDocument: index.html
+         BucketName: myprofile.cloudofthings.net
+   
+     BucketPolicy:
+       Type: AWS::S3::BucketPolicy
+       Properties:
+         PolicyDocument:
+           Id: WebPolicy
+           Version: 2012-10-17
+           Statement:
+             - Sid: PublicReadForGetBucketObjects
+               Effect: Allow
+               Principal:
+                 AWS: !Sub "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginAccessIdentity}"
+               Action: "s3:GetObject"
+               Resource: !Join
+                 - ""
+                 - - "arn:aws:s3:::"
+                   - !Ref MyWebsite
+                   - /*
+         Bucket: !Ref MyWebsite
+   
+     CloudFrontOriginAccessIdentity:
+       Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+       Properties:
+         CloudFrontOriginAccessIdentityConfig:
+           Comment: "Serverless website in S3"
+   ```
 
-`NOTE`: This command works for all AWS Lambda functions; not just the ones you deploy using SAM.
+5. Next step is to create a CloudFront distribution for that website. For testing purposes initially I've set-up low TTL so that the content gets updated more often and then I've raised the default to one week. I've chosen the cheapest Price Class option, so only North America and Europe gets cached content (just in case my Free Tier runs out before) 
 
-```bash
-cloud-resume-challenge$ sam logs -n HelloWorldFunction --stack-name cloud-resume-challenge --tail
-```
+   ```yaml
+   MyDistribution:
+       Type: AWS::CloudFront::Distribution
+       Properties:
+         DistributionConfig:
+           DefaultCacheBehavior:
+             Compress: 'true'
+             ViewerProtocolPolicy: redirect-to-https
+             TargetOriginId: s3-website
+             DefaultTTL: 86400
+             MinTTL: 1
+             MaxTTL: 86400
+             ForwardedValues:
+               QueryString: false
+           PriceClass: PriceClass_100
+           Origins:
+             - DomainName: !GetAtt MyWebsite.DomainName
+               Id: s3-website
+               S3OriginConfig:
+                 OriginAccessIdentity:
+                   Fn::Sub: 'origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}'
+           Enabled: "true"
+           DefaultRootObject: index.html
+           HttpVersion: http2
+   ```
 
-You can find more information and examples about filtering Lambda function logs in the [SAM CLI Documentation](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html).
+6. Just a side note on DNS in my case [^1]
+7. I added a new record in my hosted zone for my new domain:
 
-## Tests
+   ```yaml
+   MyRoute53Record:
+       Type: AWS::Route53::RecordSetGroup
+       Properties:
+         HostedZoneId: <<HOSTED_ZONE_ID>>
+         RecordSets:
+           - Name: myprofile.cloudofthings.link
+             Type: A
+             AliasTarget:
+               HostedZoneId: Z2FDTNDATAQYW2
+               DNSName: !GetAtt MyDistribution.DomainName
+   ```
 
-Tests are defined in the `tests` folder in this project. Use PIP to install the test dependencies and run tests.
+8. Then I added a ACM Certificate to myprofile.cloudofthings.link:
 
-```bash
-cloud-resume-challenge$ pip install -r tests/requirements.txt --user
-# unit test
-cloud-resume-challenge$ python -m pytest tests/unit -v
-# integration test, requiring deploying the stack first.
-# Create the env variable AWS_SAM_STACK_NAME with the name of the stack we are testing
-cloud-resume-challenge$ AWS_SAM_STACK_NAME=<stack-name> python -m pytest tests/integration -v
-```
+   ```yaml
+   ACMCertificate:
+       Type: "AWS::CertificateManager::Certificate"
+       Properties:
+         DomainName: myprofile.cloudofthings.link
+         DomainValidationOptions:
+           - DomainName: cloudofthings.link
+             HostedZoneId: <<HOSTED_ZONE_ID>>
+         ValidationMethod: DNS
+   ```
 
-## Cleanup
+   Then the process froze for a very long time so I added the output DNS Records manually into Route 53 Hosted Zone, I'm not sure why caused the pause, but as soon as I created it CloudFormation almost instantly finished deploying the stack. The [documentation](https://aws.amazon.com/blogs/security/how-to-use-aws-certificate-manager-with-aws-cloudformation/) isn't very clear on that. 
 
-To delete the sample application that you created, use the AWS CLI. Assuming you used your project name for the stack name, you can run the following:
+9. Next step was to attach the Certificate to the CloudFormation distribution and create an Alias:
 
-```bash
-aws cloudformation delete-stack --stack-name cloud-resume-challenge
-```
+   ```yaml
+   Properties:
+         DistributionConfig:
+           ViewerCertificate:
+             AcmCertificateArn: <<ACM_CERTIFICATE_IN_US_EAST_1_ARN><
+             SetSupportMethod: sni-only
+           Aliases:
+             - myprofile.cloudofthings.net
+   ```
 
-## Resources
+   Here's where I run into a complicated problem. Since the CloudFront accepts Certificates created only in us-east-1 region, I couldn't attach the one I tried to create in the template. As far as I know there's no simple support for creating resources in another region and then referencing them in CloudFront. So here I had to go and create a Certificate in Console, I know there's a way to deploy resources in another regions using various stack but at my level it's seems bit to advanced.
 
-See the [AWS SAM developer guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) for an introduction to SAM specification, the SAM CLI, and serverless application concepts.
+   ![myprofile](img/lab70_myprofile.jpg)
 
-Next, you can use AWS Serverless Application Repository to deploy ready to use Apps that go beyond hello world samples and learn how authors developed their applications: [AWS Serverless Application Repository main page](https://aws.amazon.com/serverless/serverlessrepo/)
+   Alright! So the frontend is set-up and running! 
+
+10. Now that the website is secured and online it's time to deploy resources for the backend: the visitors counter.
+
+[^1]: Next step is to create a custom domain for my resume. The things is that I already run a website in/on LightSail and moved my hosted zone for domain (that I bought through Route 53) to LightSail. The idea is that hosted zone in LightSail is included and won't cost anything extra while a hosted zone in Route 53 would invoke charges as soon as my Free Tier expires (which is soon). So I couldn't continue with that part using SAM, since SAM doesn't cover creating domains in LightSail neither have I access to it's hosted zone. So I figured that I'll buy a cheap domain only for testing purposes and as proof that I accomplished the challenge, but will use my [profile.cloudofthings.net](https://profile.cloudofthings.net/) in the long run. I bought cloudofthings.net, it costed my $6.25 a year, and maybe I'll use in the future for other projects. So the argument on naming S3 bucket isn't relevant at all since that my new websites domain will point to a CloudFront domain not to a bucket with frontend code.
+
+---
+### Lab files
+* [SAM template](template.yaml)
+---
+
+### Acknowledgements
+* [Cloud Resume Challenge](https://cloudresumechallenge.dev/)
+
