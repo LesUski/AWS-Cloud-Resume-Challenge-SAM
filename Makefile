@@ -1,4 +1,7 @@
+SHELL:=/bin/bash
+
 .PHONY: build
+.SILENT: integration-test
 
 build:
 	sam build
@@ -13,9 +16,8 @@ invoke-put:
 	sam build && aws-vault exec sam-user --no-session -- sam local invoke PutCountFunction
 
 integration-test:
-	DOMAIN_NAME=$$(cat config.json | jq .DOMAIN_NAME -r); \
-	FIRST=$$(curl -s "https://8zqfnxf6tf.execute-api.eu-north-1.amazonaws.com/Prod/get" | jq ".count| tonumber"); \
+	FIRST=$$(curl -s "https://8zqfnxf6tf.execute-api.eu-north-1.amazonaws.com/Prod/get" | jq ".body| tonumber"); \
 	curl -s "https://8zqfnxf6tf.execute-api.eu-north-1.amazonaws.com/Prod/put"; \
-	SECOND=$$(curl -s "https://8zqfnxf6tf.execute-api.eu-north-1.amazonaws.com/Prod/get" | jq ".count| tonumber"); \
+	SECOND=$$(curl -s "https://8zqfnxf6tf.execute-api.eu-north-1.amazonaws.com/Prod/get" | jq ".body| tonumber"); \
 	echo "Comparing if first count ($$FIRST) is less than (<) second count ($$SECOND)"; \
 	if [[ $$FIRST -le $$SECOND ]]; then echo "PASS"; else echo "FAIL";  fi
