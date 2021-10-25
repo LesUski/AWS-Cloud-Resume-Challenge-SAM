@@ -68,7 +68,7 @@ Resources:
           Compress: 'true'
           ViewerProtocolPolicy: redirect-to-https
           TargetOriginId: s3-website
-          DefaultTTL: 86400
+          DefaultTTL: 30
           MinTTL: 1
           MaxTTL: 86400
           ForwardedValues:
