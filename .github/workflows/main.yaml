@@ -11,6 +11,6 @@ jobs:
         with:
           python-version: '3.x'
       - name: test get-count-function
-        run: cd get-function && python test -v ./ && cd ../../
+        run: cd get-function && python app.py -v ./ && cd ../../
       - name: test put-count-function
-        run: cd put-function && python test -v ./ && cd ../../
+        run: cd put-function && python app.py -v ./ && cd ../../
