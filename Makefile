@@ -11,3 +11,11 @@ deploy-site:
 
 invoke-put:
 	sam build && aws-vault exec sam-user --no-session -- sam local invoke PutCountFunction
+
+integration-test:
+	DOMAIN_NAME=$$(cat config.json | jq .DOMAIN_NAME -r); \
+	FIRST=$$(curl -s "https://api.$$DOMAIN_NAME/get" | jq ".count| tonumber"); \
+	curl -s "https://api.$$DOMAIN_NAME/put"; \
+	SECOND=$$(curl -s "https://api.$$DOMAIN_NAME/get" | jq ".count| tonumber"); \
+	echo "Comparing if first count ($$FIRST) is less than (<) second count ($$SECOND)"; \
+	if [[ $$FIRST -le $$SECOND ]]; then echo "PASS"; else echo "FAIL";  fi
