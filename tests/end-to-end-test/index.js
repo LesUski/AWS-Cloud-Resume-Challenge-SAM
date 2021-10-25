@@ -14,7 +14,7 @@ const sleep = async (r) => await new Promise(r => setTimeout(r, 2000));
     const element = await page.$("body")
     const property = await element.getProperty('innerHTML');
     const count = await property.jsonValue();
-    console.log(`Getting page element, count: ${body}`)
+    console.log(`Getting page element, count: ${data}`)
     if (!count) {
         throw new Error("Cannot find count value")
     } else {
