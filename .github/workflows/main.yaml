@@ -1,7 +1,5 @@
 name: main
 on: push
-env:
-  PYTHON_VERSION: 3.x
 
 jobs:
   test-infra:
@@ -9,9 +7,9 @@ jobs:
     timeout-minutes: 2
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@3.x
+      - uses: actions/setup-python@v2
         with:
-          python-version: ${{ env.PYTHON_VERSION}}
+          python-version: '3.x'
       - name: test get-count-function
         run: cd cloud-resume-challenge/get-function && python test -v ./ && cd ../../
       - name: test put-count-function
