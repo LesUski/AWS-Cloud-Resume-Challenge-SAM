@@ -69,7 +69,7 @@ It's time to start deploying the Cloud Resume Challenge resources using the AWS 
 
    This will deploy the stack in AWS.
 
-   ![sam_cli_stack](img/lab70_sam_cli_stack.jpg)
+   ![sam_cli_stack](https://github.com/CloudedThings/100-Days-in-Cloud/blob/main/Labs/70-SAM-Iac-Website-with-CloudFront-1/img/lab70_sam_cli_stack.jpg)
 
 3. Ok, now that my sample resources and SAM are deployed it's time to create CRC specific resources using updating that existing stack. I wanted my site to be hosted under myprofile.cloudofthings.net domain so the S3 bucket for the frontend code needs to be called accordingly. But since I'm using CloudFront domain name later on so it doesn't really matter. Then you need to run
 
@@ -226,7 +226,7 @@ It's time to start deploying the Cloud Resume Challenge resources using the AWS 
 
    Here's where I run into a complicated problem. Since the CloudFront accepts Certificates created only in us-east-1 region, I couldn't attach the one I tried to create in the template. As far as I know there's no simple support for creating resources in another region and then referencing them in CloudFront. So here I had to go and create a Certificate in Console, I know there's a way to deploy resources in another regions using various stack but at my level it's seems bit to advanced.
 
-   ![myprofile](img/lab70_myprofile.jpg)
+   ![myprofile](https://github.com/CloudedThings/100-Days-in-Cloud/blob/main/Labs/70-SAM-Iac-Website-with-CloudFront-1/img/lab70_myprofile.jpg)
 
    Alright! So the frontend is set-up and running! 
 
