@@ -26,6 +26,17 @@ jobs:
       - name: SAM Deploy
         run: |
           sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+
+  upload-website-to-s3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+      - run: aws s3 sync ./website s3://profile.cloudofthings.net
   
   integration-test-backend:
     needs: build-and-deploy-infra
